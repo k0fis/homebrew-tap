@@ -1,6 +1,6 @@
 cask "kfs-md" do
-  version "0.5.1"
-  sha256 "dc9c67e37856bc77df37074e6c4e97befc373b3344f4695ea9a3433ccae4d45b"
+  version "0.5.2"
+  sha256 "081a428f3ada8bcd12934131657032869b55a4d4d05c5a23c6760fda82083736"
 
   url "https://github.com/k0fis/kfs-md/releases/download/v#{version}/kfs-md-macos-arm64.dmg"
   name "kfs-md"
