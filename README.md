@@ -1,11 +1,11 @@
-# k0fis/homebrew
+# k0fis/homebrew-tap
 
 Homebrew tap for k0fis projects.
 
 ## Usage
 
 ```bash
-brew tap k0fis/homebrew
+brew tap k0fis/tap
 brew install --cask kfs-md
 ```
 
