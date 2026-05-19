@@ -1,0 +1,73 @@
+name: Update Formula
+
+on:
+  repository_dispatch:
+    types: [update-formula]
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download binaries and compute SHA256
+        run: |
+          FORMULA="${{ github.event.client_payload.formula }}"
+          VERSION="${{ github.event.client_payload.version }}"
+          MACOS_AMD64_URL="${{ github.event.client_payload.macos_amd64_url }}"
+          MACOS_ARM64_URL="${{ github.event.client_payload.macos_arm64_url }}"
+          LINUX_AMD64_URL="${{ github.event.client_payload.linux_amd64_url }}"
+
+          # Wait for release assets to be available
+          sleep 30
+
+          curl -sL "$MACOS_AMD64_URL" -o macos-amd64
+          curl -sL "$MACOS_ARM64_URL" -o macos-arm64
+          curl -sL "$LINUX_AMD64_URL" -o linux-amd64
+
+          SHA_MACOS_AMD64=$(sha256sum macos-amd64 | cut -d' ' -f1)
+          SHA_MACOS_ARM64=$(sha256sum macos-arm64 | cut -d' ' -f1)
+          SHA_LINUX_AMD64=$(sha256sum linux-amd64 | cut -d' ' -f1)
+
+          # Strip leading 'v' from version
+          CLEAN_VERSION="${VERSION#v}"
+
+          echo "FORMULA=$FORMULA" >> $GITHUB_ENV
+          echo "CLEAN_VERSION=$CLEAN_VERSION" >> $GITHUB_ENV
+          echo "SHA_MACOS_AMD64=$SHA_MACOS_AMD64" >> $GITHUB_ENV
+          echo "SHA_MACOS_ARM64=$SHA_MACOS_ARM64" >> $GITHUB_ENV
+          echo "SHA_LINUX_AMD64=$SHA_LINUX_AMD64" >> $GITHUB_ENV
+
+      - name: Update formula
+        run: |
+          FORMULA_FILE="Formula/${FORMULA}.rb"
+          if [ ! -f "$FORMULA_FILE" ]; then
+            echo "Formula $FORMULA_FILE not found!"
+            exit 1
+          fi
+
+          sed -i "s/version \".*\"/version \"${CLEAN_VERSION}\"/" "$FORMULA_FILE"
+
+          # Update SHA256 values in order: arm64, amd64 (macOS), linux
+          # macOS arm64 is first sha256 line
+          awk -v sha_arm="$SHA_MACOS_ARM64" -v sha_amd="$SHA_MACOS_AMD64" -v sha_linux="$SHA_LINUX_AMD64" '
+          BEGIN { sha_count=0 }
+          /sha256/ {
+            sha_count++
+            if (sha_count == 1) { sub(/sha256 ".*"/, "sha256 \"" sha_arm "\"") }
+            if (sha_count == 2) { sub(/sha256 ".*"/, "sha256 \"" sha_amd "\"") }
+            if (sha_count == 3) { sub(/sha256 ".*"/, "sha256 \"" sha_linux "\"") }
+          }
+          { print }
+          ' "$FORMULA_FILE" > "$FORMULA_FILE.tmp" && mv "$FORMULA_FILE.tmp" "$FORMULA_FILE"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/
+          git commit -m "Update ${FORMULA} to ${CLEAN_VERSION}" || echo "No changes"
+          git push
