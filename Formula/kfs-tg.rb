@@ -1,7 +1,7 @@
 class KfsTg < Formula
   desc "Minimalist TUI Telegram client"
   homepage "https://github.com/k0fis/kfs-tg"
-  version "0.3.0"
+  version "0.3.1"
   license "MIT"
 
   on_macos do
