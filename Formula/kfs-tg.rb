@@ -1,22 +1,22 @@
 class KfsTg < Formula
   desc "Minimalist TUI Telegram client"
   homepage "https://github.com/k0fis/kfs-tg"
-  version "0.3.2"
+  version "0.3.3"
   license "MIT"
 
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/k0fis/kfs-tg/releases/download/v#{version}/kfs-tg-macos-arm64"
-      sha256 "1ee4d736a7ba851f45dcb5ac813ffa27b31cf7d0ac4ea2c39985eda224dc4f44"
+      sha256 "3b1f22e98d79570e9af8ac682b40bacb756362e813d9022c3a1f754a1eb4f731"
     else
       url "https://github.com/k0fis/kfs-tg/releases/download/v#{version}/kfs-tg-macos-amd64"
-      sha256 "93fcceec804f86d01b17adf5a89eddbc3f90854e47bfcd9e6e5ce61485655dd3"
+      sha256 "e978dd21960f023b5fa97e81caadfd667c8ea1c97f186245c33d7d3eaa5540ac"
     end
   end
 
   on_linux do
     url "https://github.com/k0fis/kfs-tg/releases/download/v#{version}/kfs-tg-linux-amd64"
-    sha256 "930d21ec90777460ed6434ac719c34bfea62593c50d27855f1def66c12ee3eb0"
+    sha256 "45359b5bd1f65bddfde43b2b10b195021dd5af0f5d213abf2c839be926134c72"
   end
 
   def install
