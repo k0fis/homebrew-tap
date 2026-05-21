@@ -7,16 +7,16 @@ class KfsTg < Formula
   on_macos do
     if Hardware::CPU.arm?
       url "https://github.com/k0fis/kfs-tg/releases/download/v#{version}/kfs-tg-macos-arm64"
-      sha256 "635a33a63b35ba1e1024e6d8cf22a37807e5b5e89cbc3ef0ab5179a6636cc501"
+      sha256 "0cf636c29aeecea37f9f6da09b871d1773cab319d1b05f0b6be65d5ef7904c49"
     else
       url "https://github.com/k0fis/kfs-tg/releases/download/v#{version}/kfs-tg-macos-amd64"
-      sha256 "c1a29d48917fc6a6e9e5c20079bc70173cdcb3d33beaaffe8f9daec89bcdf45d"
+      sha256 "851b969667716510b8cc1e99b05cbf75883e8456fc1d46e705c32819b01de019"
     end
   end
 
   on_linux do
     url "https://github.com/k0fis/kfs-tg/releases/download/v#{version}/kfs-tg-linux-amd64"
-    sha256 "6af369eae6909ec0ba94c41760a6ac80ba367b253c0f4b0dbec4c60b53ff1089"
+    sha256 "2e46f7e241eff3d5a987ab4d71b8e1aa14810f2f40202691df284f3df9fd1d07"
   end
 
   def install
