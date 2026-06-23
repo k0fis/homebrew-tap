@@ -7,7 +7,7 @@ cask "kfs-md" do
   desc "Markdown and plain text viewer with dark terminal aesthetic"
   homepage "https://github.com/k0fis/kfs-md"
 
-  depends_on macos: ">= :ventura"
+  depends_on macos: :ventura
 
   app "kfs-md.app"
 
